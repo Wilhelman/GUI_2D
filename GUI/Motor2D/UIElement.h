@@ -13,7 +13,9 @@ enum UI_State {
 	STATE_MOUSE_ENTER,
 	STATE_MOUSE_LEAVE,
 	STATE_LEFT_MOUSE_PRESSED,
+	STATE_LEFT_MOUSE_RELEASED,
 	STATE_RIGHT_MOUSE_PRESSED,
+	STATE_RIGHT_MOUSE_RELEASED,
 	STATE_FOCUSED,
 	
 	STATE_NO_DEF
@@ -52,8 +54,6 @@ public:
 	iPoint GetLocalPosition() const;
 	iPoint GetScreenPosition() const;
 	SDL_Rect GetRect() const;
-	bool IsPointOutsideRect(const iPoint& point) const;
-	bool IsRectOutside() const;
 
 	void SetParent(UIElement* parent);
 	UIElement* GetParent() const;

@@ -3,6 +3,7 @@
 #include "j1Render.h"
 #include "j1Gui.h"
 #include "j1Input.h"
+#include "UIButton.h"
 
 
 UIElement::UIElement(int x, int y, UI_Type type, UIElement* parent) : screen_position(x,y), type(type), parent(parent)
@@ -36,38 +37,44 @@ void UIElement::Update()
 	
 	if (element_to_trigger != nullptr && this == element_to_trigger) 
 	{
+		if (current_state == STATE_LEFT_MOUSE_RELEASED)
+			current_state = STATE_NORMAL;
+
 		if (current_state != STATE_MOUSE_ENTER && current_state != STATE_LEFT_MOUSE_PRESSED) 
 		{
 			current_state = UI_State::STATE_MOUSE_ENTER;
+			if (this->type == BUTTON)
+				((UIButton*)this)->UpdateButtonWithSelfRect(((UIButton*)this)->btn_focused);
 			this->callback->OnUITrigger(this, current_state);
 		}
 
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT && current_state == STATE_MOUSE_ENTER) 
 		{
 			current_state = STATE_LEFT_MOUSE_PRESSED;
+			if (this->type == BUTTON)
+				((UIButton*)this)->UpdateButtonWithSelfRect(((UIButton*)this)->btn_pressed);
 			this->callback->OnUITrigger(this, current_state);
 		}
 		else if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP && current_state == STATE_LEFT_MOUSE_PRESSED) 
 		{
-			current_state = STATE_NORMAL;
+			current_state = STATE_LEFT_MOUSE_RELEASED;
+			if (this->type == BUTTON)
+				((UIButton*)this)->UpdateButtonWithSelfRect(((UIButton*)this)->btn_normal);
 			this->callback->OnUITrigger(this, current_state);
 		}
 
-		if (current_state == STATE_LEFT_MOUSE_PRESSED) 
+		if (current_state == STATE_LEFT_MOUSE_PRESSED && this->draggable) 
 		{
-			if (this->draggable) 
-			{
-				App->input->GetMouseMotion(mouse_motion_x, mouse_motion_y);
+			App->input->GetMouseMotion(mouse_motion_x, mouse_motion_y);
 
-				if (mouse_x != tmp_mouse_x || mouse_y != tmp_mouse_y) 
-				{
-					screen_position.x += mouse_motion_x;
-					screen_position.y += mouse_motion_y;
-					local_position.x += mouse_motion_x;
-					local_position.y += mouse_motion_y;
-					tmp_mouse_x = mouse_x;
-					tmp_mouse_y = mouse_y;
-				}
+			if (mouse_x != tmp_mouse_x || mouse_y != tmp_mouse_y)
+			{
+				screen_position.x += mouse_motion_x;
+				screen_position.y += mouse_motion_y;
+				local_position.x += mouse_motion_x;
+				local_position.y += mouse_motion_y;
+				tmp_mouse_x = mouse_x;
+				tmp_mouse_y = mouse_y;
 			}
 		}
 	}
@@ -76,6 +83,8 @@ void UIElement::Update()
 		if (current_state == UI_State::STATE_MOUSE_ENTER || current_state == STATE_LEFT_MOUSE_PRESSED) 
 		{
 			current_state = UI_State::STATE_MOUSE_LEAVE;
+			if (this->type == BUTTON)
+				((UIButton*)this)->UpdateButtonWithSelfRect(((UIButton*)this)->btn_normal);
 			this->callback->OnUITrigger(this, current_state);
 		}
 		else if (current_state == STATE_MOUSE_LEAVE)

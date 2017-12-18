@@ -55,85 +55,6 @@ bool j1Scene::Start()
 	draggable_btn->draggable = true;
 	buttons.PushBack(draggable_btn);
 
-	/*
-	buttons.PushBack((UIImage*)App->gui->AddUIImage(300, 100, { 0,113,229,69 },this));
-	buttons.PushBack((UIImage*)App->gui->AddUIImage(300, 170, { 0,113,229,69 },this));
-	buttons.PushBack((UIImage*)App->gui->AddUIImage(300, 240, { 0,113,229,69 }, this));
-	buttons.PushBack((UIImage*)App->gui->AddUIImage(300, 310, { 0,113,229,69 }, this));
-	*/
-
-	//WOW LOGIN
-
-	/*
-	// Background
-	App->gui->AddUIImage(0, 0, { 0, 0, 1200, 900 });
-
-	// WoW logo
-	App->gui->AddUIImage(0, 0, { 618, 1236, 351, 149 });
-
-	// Blizzard logo
-	App->gui->AddUIImage(550, 800, { 0, 1236, 125, 77 });
-
-	//Red box
-	App->gui->AddUIImage(1036, 827, { 135, 1236, 144, 40 });
-	App->gui->AddUIImage(1036, 683, { 135, 1236, 144, 40 });
-	App->gui->AddUIImage(1036, 643, { 135, 1236, 144, 40 });
-	App->gui->AddUIImage(1036, 603, { 135, 1236, 144, 40 });
-	App->gui->AddUIImage(20, 740, { 135, 1236, 144, 40 });
-	App->gui->AddUIImage(20, 701, { 135, 1236, 144, 40 });
-	App->gui->AddUIImage(535, 615, { 135, 1236, 144, 40 });
-
-	// Black box
-	App->gui->AddUIImage(535, 540, { 309, 1236, 144, 40 });
-	App->gui->AddUIImage(535, 465, { 309, 1236, 144, 40 });
-
-	// ESRB sign
-	App->gui->AddUIImage(26, 820, { 474, 1236, 128, 40 });
-
-	//checkbox
-	App->gui->AddUIImage(26, 790, { 309, 1276, 16, 16 });
-
-	// Acount Name text
-	App->gui->AddUILabel(560, 450, "Account Name", YELLOW);
-
-	// Acount Name text
-	App->gui->AddUILabel(555, 525, "Account Password", YELLOW);
-
-	// Acount Name text
-	App->gui->AddUILabel(587, 625, "Login", YELLOW);
-
-	// Copyright text
-	App->gui->AddUILabel(435, 880, "Copyright 2004-2007 Blizzard Entertainment. All Rights Reserved", YELLOW);
-
-	// Version text
-	App->gui->AddUILabel(26, 865, "Version 2.0.12 (6546) (Release)", YELLOW);
-	App->gui->AddUILabel(26, 880, "Mar 30 2007", YELLOW);
-
-	// Quit text
-	App->gui->AddUILabel(1095, 837, "Quit", YELLOW);
-
-	//Terms of use text
-	App->gui->AddUILabel(1070, 694, "Terms of Use", YELLOW);
-
-	//WoWps.org TBC text
-	App->gui->AddUILabel(1070, 730, "WoWps.org TBC", GREY);
-
-	//Credits text
-	App->gui->AddUILabel(1085, 655, "Credits", YELLOW);
-
-	//Cinematics text
-	App->gui->AddUILabel(1077, 615, "Cinematics", YELLOW);
-
-	//Remember Account Name text
-	App->gui->AddUILabel(50, 795, "Remember Account Name", YELLOW);
-
-	//Community Site text
-	App->gui->AddUILabel(45, 752, "Community Site", YELLOW);
-
-	//Manage Account text
-	App->gui->AddUILabel(45, 713, "Manage Account", YELLOW);
-	*/
-
 	return true;
 }
 
@@ -192,7 +113,6 @@ bool j1Scene::Update(float dt)
 		App->render->camera.x -= floor(200.0f * dt);
 
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
-		UIElement * tmp_elem = (UIElement*)text;
 		if (!App->gui->DeleteAllUIElements())
 			LOG("Error deleting all the UIElements!");
 	}
@@ -223,9 +143,6 @@ bool j1Scene::Update(float dt)
 			buttons[0]->UpdateButtonWithSelfRect(buttons[0]->btn_focused);
 		}
 	}
-
-
-
 
 	App->map->Draw();
 
@@ -275,6 +192,8 @@ bool j1Scene::PostUpdate()
 bool j1Scene::CleanUp()
 {
 	LOG("Freeing scene");
+	if (!App->gui->DeleteAllUIElements())
+		LOG("Error deleting all the UIElements!");
 
 	return true;
 }
@@ -313,14 +232,16 @@ void j1Scene::OnUITrigger(UIElement* elementTriggered, UI_State ui_state) {
 					break;
 				}
 			}
-			tmpBtn->UpdateButtonWithSelfRect(tmpBtn->btn_focused);
 			break;
 		}
 		case STATE_MOUSE_LEAVE:
-			tmpBtn->UpdateButtonWithSelfRect(tmpBtn->btn_normal);
+			LOG("MOUSE LEAVE");
 			break;
 		case STATE_LEFT_MOUSE_PRESSED:
-			tmpBtn->UpdateButtonWithSelfRect(tmpBtn->btn_pressed);
+			LOG("LEFT PRESSED");
+			break;
+		case STATE_LEFT_MOUSE_RELEASED:
+			LOG("LEFT RELEASED");
 			break;
 		case STATE_NO_DEF:
 			break;
