@@ -2,6 +2,7 @@
 #define __j1GUI_H__
 
 #include "j1Module.h"
+#include <vector>
 #include "p2DynArray.h"
 
 #define CURSOR_WIDTH 2
@@ -75,8 +76,8 @@ public:
 
 private:
 
-	p2DynArray<UIElement*> ui_elements;
-	//UIElement* ui_elements[MAX_UI];
+
+	std::vector<UIElement*> ui_elements;
 
 	SDL_Texture* atlas;
 	p2SString atlas_file_name;
